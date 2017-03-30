@@ -1,0 +1,33 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+
+    <!--  一下都没有用到  -->
+
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- 由于写了这句，可以将状态栏隐藏，同样状态栏的内容也被隐藏了，这就需要对android5以上，以及android 4.4 以及相关版本经行适配，添加一个和ToolBar相同颜色的状态栏大小的矩形-->
+        <!-- 需要在 values-v21  以及  values-v19 中添加dimens.xml 文件中添加 <dimen name="tool_bar_top_padding">24dp</dimen>   即Toolba的高度大小    -->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <!--设置状态栏的颜色-->
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!-- 设置Toolbar的颜色-->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <!-- 设置Toolbar 字体的颜色-->
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <!-- 设置背景颜色-->
+        <!--<item name="android:windowBackground">@color/windowBackground</item>-->
+
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+</resources>
