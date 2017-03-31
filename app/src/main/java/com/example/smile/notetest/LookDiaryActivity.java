@@ -158,7 +158,7 @@ public class LookDiaryActivity extends AppCompatActivity {
     }
 
     public String getTime() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm  yyyy.MM.dd");
         Date date = new Date();
         String str = format.format(date);
         return str;

@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void selectDB() {
-        cursor = dbReader.query(NotesDB.TABLE_NAME,null,null,null,null,null,null);
+        cursor = dbReader.query(NotesDB.TABLE_NAME,null,null,null,null,null, NotesDB.ID+" DESC"); //通过id降序排列
         adapter = new MyAdapter(this,cursor);   //实例化adapter，通过adapter进行适配
         listView.setAdapter(adapter);
     }
