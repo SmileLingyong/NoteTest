@@ -52,18 +52,12 @@ public class LookDiaryActivity extends AppCompatActivity {
         DEFAULT_CONTENT = getIntent().getStringExtra(NotesDB.CONTENT);  //记录未修改前的 CONTENT
 
         initToolbar();  //初始化 Toolbar
-        detail_editText = (EditText) findViewById(R.id.note_detail_extext);
-        detail_time = (TextView) findViewById(R.id.note_detail_time);
+        initView();     //显示具体日记
 
-        detail_editText.clearFocus();   //清除EditText的焦点
-        detail_editText.setCursorVisible(false);    //隐藏光标
-
-        detail_editText.setText(getIntent().getStringExtra(NotesDB.CONTENT));   //显示日记内容
-        detail_time.setText(getIntent().getStringExtra(NotesDB.TIME));          //显示日记时间
-
+        /*//调试信息
         Log.d("Tag", getIntent().getStringExtra(NotesDB.CONTENT));
         Log.d("Tag", getIntent().getStringExtra(NotesDB.TIME));
-
+*/
 
         //判断文本编辑框是否是否被点击，点击后就将返回按钮  换成  保存按钮。
         detail_editText.setOnClickListener(new View.OnClickListener() {
@@ -76,21 +70,9 @@ public class LookDiaryActivity extends AppCompatActivity {
                 flag = 1;
 
                 Log.d("Tag1", DEFAULT_STRING_ID);
-                modify();
-                modify();
-
             }
         });
 
-    }
-
-    public void initToolbar() {
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar_note_detail);
-        toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
-        toolbar.setTitle("");
-        toolbarTitle.setText("查看日记");
-        toolbar.setNavigationIcon(R.drawable.ic_action_note_detail_return);//设置返回按钮
 
         //添加返回按钮事件
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -99,23 +81,42 @@ public class LookDiaryActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d("TagAfterClick", detail_editText.getText().toString());
                 //点击返回按钮 或 点击保存按钮，就保存最后修改后的 EditText
-                modify();
-
-
 
                 Intent upIntent = NavUtils.getParentActivityIntent(LookDiaryActivity.this);
                 if (NavUtils.shouldUpRecreateTask(LookDiaryActivity.this, upIntent)) {
+                    modify();
                     TaskStackBuilder.create(LookDiaryActivity.this)
                             .addNextIntentWithParentStack(upIntent)
                             .startActivities();
                 } else {
+                    modify();
                     upIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     NavUtils.navigateUpTo(LookDiaryActivity.this, upIntent);
                 }
             }
         });
 
+    }
+
+
+    public void initToolbar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar_note_detail);
+        toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
+        toolbar.setTitle("");
+        toolbarTitle.setText("查看日记");
+        toolbar.setNavigationIcon(R.drawable.ic_action_note_detail_return);     //设置返回按钮
         setSupportActionBar(toolbar);
+    }
+
+    public void initView() {
+        detail_editText = (EditText) findViewById(R.id.note_detail_extext);
+        detail_time = (TextView) findViewById(R.id.note_detail_time);
+
+        detail_editText.clearFocus();   //清除EditText的焦点
+        detail_editText.setCursorVisible(false);    //隐藏光标
+
+        detail_editText.setText(getIntent().getStringExtra(NotesDB.CONTENT));   //显示日记内容
+        detail_time.setText(getIntent().getStringExtra(NotesDB.TIME));          //显示日记时间
     }
 
 
@@ -151,9 +152,9 @@ public class LookDiaryActivity extends AppCompatActivity {
 
         ContentValues cv = new ContentValues();
         cv.put(NotesDB.CONTENT, detail_editText.getText().toString());
-        cv.put(NotesDB.TIME, getTime());
+        cv.put(NotesDB.TIME, getTime().toString());
 
-        dbWriter.update(NotesDB.TABLE_NAME, cv, "content=?", new String[]{DEFAULT_CONTENT});
+        dbWriter.update(NotesDB.TABLE_NAME, cv, "_id=?", new String[]{Integer.toString(DEFAULT_INT_ID)});
     }
 
     public String getTime() {
@@ -169,4 +170,5 @@ public class LookDiaryActivity extends AppCompatActivity {
         modify();
         finish();
     }
+
 }
