@@ -97,7 +97,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //每当监控到EditText中有变化就执行该方法
             @Override
             public boolean onQueryTextChange(String newText) {
-                searchDB(newText);
+                //用try catch 处理输入 单引号的异常（因为这样SQL语句会不完整，有错，程序会崩掉）
+                try {
+                    searchDB(newText);
+                } catch (Exception e) {
+
+                }
                 return false;
             }
         });
@@ -113,9 +118,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //查询功能
     public void searchDB(String mSearchText) {
-        String sql = "select * from notes where content like '%"
-                + mSearchText + "%' order by _id DESC";
-        cursor = dbReader.rawQuery(sql,null); //通过id降序排列
+        //注意：这里不能输入单引号！！！（因为这样SQL语句会不完整，出错）
+        String sql = "select * from notes where content like '%" + mSearchText + "%' order by _id DESC";
+        cursor = dbReader.rawQuery(sql, null); //通过id降序排列
         adapter = new MyAdapter(this, cursor);   //实例化adapter，通过adapter进行适配
         listView.setAdapter(adapter);
     }
