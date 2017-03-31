@@ -1,4 +1,4 @@
-package com.example.smile.notetest;
+package com.example.smile.notetest.activity;
 
 import android.app.TaskStackBuilder;
 import android.content.ContentValues;
@@ -19,6 +19,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.smile.notetest.NotesDB;
+import com.example.smile.notetest.R;
 
 import java.util.Date;
 

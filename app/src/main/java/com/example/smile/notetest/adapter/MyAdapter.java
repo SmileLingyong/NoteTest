@@ -1,4 +1,4 @@
-package com.example.smile.notetest;
+package com.example.smile.notetest.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.smile.notetest.R;
 
 /**
  * Created by lly54 on 2017/3/29.

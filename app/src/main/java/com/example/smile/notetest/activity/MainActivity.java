@@ -1,16 +1,24 @@
-package com.example.smile.notetest;
+package com.example.smile.notetest.activity;
 
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
+
+import com.example.smile.notetest.NotesDB;
+import com.example.smile.notetest.R;
+import com.example.smile.notetest.adapter.MyAdapter;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -68,9 +76,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
+    //加载 主页面search 图表
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_note_main_search, menu);
+        final MenuItem item = menu.findItem(R.id.action_note_main_search);
+        // 注意这里导报要 导入 android.widget.SearchView 而不是  android.support.v7.widget.SearchView;
+        SearchView searchView = (SearchView) item.getActionView();      //通过以上几句 获取SearchView
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            //点击搜索按钮后的功能
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Log.d("Tag", query);
+                searchDB(query);
+                return false;
+            }
+
+            //每当监控到EditText中有变化就执行该方法
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchDB(newText);
+                return false;
+            }
+        });
+        return true;
+    }
+
+
     public void selectDB() {
-        cursor = dbReader.query(NotesDB.TABLE_NAME,null,null,null,null,null, NotesDB.ID+" DESC"); //通过id降序排列
-        adapter = new MyAdapter(this,cursor);   //实例化adapter，通过adapter进行适配
+        cursor = dbReader.query(NotesDB.TABLE_NAME, null, null, null, null, null, NotesDB.ID + " DESC"); //通过id降序排列
+        adapter = new MyAdapter(this, cursor);   //实例化adapter，通过adapter进行适配
+        listView.setAdapter(adapter);
+    }
+
+    //查询功能
+    public void searchDB(String mSearchText) {
+        String sql = "select * from notes where content like '%"
+                + mSearchText + "%' order by _id DESC";
+        cursor = dbReader.rawQuery(sql,null); //通过id降序排列
+        adapter = new MyAdapter(this, cursor);   //实例化adapter，通过adapter进行适配
         listView.setAdapter(adapter);
     }
 

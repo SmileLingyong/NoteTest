@@ -7,4 +7,7 @@
     <string name="lifestyle">属于你的生活点滴</string>
     <string name="search">search</string>
     <string name="changeTheme">changeTheme</string>
+    <string name="delete">delete</string>
+    <string name="save">save</string>
+
 </resources>

@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme">
 
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,14 +21,14 @@
         </activity>
 
         <activity
-            android:name=".NoteEditActivity"
-            android:parentActivityName=".MainActivity"
+            android:name=".activity.NoteEditActivity"
+            android:parentActivityName=".activity.MainActivity"
             android:windowSoftInputMode="adjustUnspecified|stateVisible"
             tools:targetApi="jelly_bean">
         </activity>
 
-        <activity android:name=".LookDiaryActivity"
-            android:parentActivityName=".MainActivity"
+        <activity android:name=".activity.LookDiaryActivity"
+            android:parentActivityName=".activity.MainActivity"
             android:windowSoftInputMode="stateHidden">
         </activity>
 

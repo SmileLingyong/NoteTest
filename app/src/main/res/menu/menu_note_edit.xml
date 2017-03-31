@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".NoteEditActivity">
+    tools:context=".activity.NoteEditActivity">
 
     <item
         android:id="@+id/action_note_create_save"
         android:icon="@drawable/ic_action_note_create_save"
         android:orderInCategory="90"
-        android:title="@string/changeTheme"
+        android:title="@string/save"
         app:showAsAction="ifRoom" />
 
 </menu>

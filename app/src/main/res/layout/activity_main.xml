@@ -7,7 +7,7 @@
     android:background="#EEEEEE"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.example.smile.notetest.MainActivity">
+    tools:context="com.example.smile.notetest.activity.MainActivity">
 
     <include
         android:id="@+id/toolbar_main"
