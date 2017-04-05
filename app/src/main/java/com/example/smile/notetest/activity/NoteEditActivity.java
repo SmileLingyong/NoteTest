@@ -1,14 +1,21 @@
 package com.example.smile.notetest.activity;
 
+import android.Manifest;
 import android.app.TaskStackBuilder;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -19,11 +26,18 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.smile.notetest.NotesDB;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.example.smile.notetest.db.NotesDB;
 import com.example.smile.notetest.R;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by lly54 on 2017/3/29.
@@ -32,6 +46,7 @@ import java.util.Date;
 public class NoteEditActivity extends AppCompatActivity {
 
     private final String DEFAULT_EDITTEXT = "  写点什么吧";
+    private String MyPosition = "";
     private Button savebtn, cancalbtn;
     private TextView editText, toolbarTitle;
     private Toolbar toolbar;
@@ -39,12 +54,15 @@ public class NoteEditActivity extends AppCompatActivity {
     private NotesDB notesDB;            //创建一个数据库
     private SQLiteDatabase dbWriter;    //创建一个添加权限
 
+    public LocationClient mLocationClient;  //创建一个LocationClient实例
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_edit);
         initToolbar();
+        initLocation();
+
         editText = (TextView) findViewById(R.id.edit_content);
 
         notesDB = new NotesDB(this);                //实例化数据库
@@ -80,7 +98,85 @@ public class NoteEditActivity extends AppCompatActivity {
 
     }
 
-    //隐藏键盘
+    //初始化定位功能
+    public void initLocation() {
+        mLocationClient = new LocationClient(getApplicationContext());
+        mLocationClient.registerLocationListener(new MyLocationListener());
+        List<String> permissionList = new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(NoteEditActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+        if (ContextCompat.checkSelfPermission(NoteEditActivity.this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.READ_PHONE_STATE);
+        }
+        if (ContextCompat.checkSelfPermission(NoteEditActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (!permissionList.isEmpty()) {
+            String [] permissions = permissionList.toArray(new String[permissionList.size()]);
+            ActivityCompat.requestPermissions(NoteEditActivity.this, permissions, 1);
+        } else {
+            requestLocation();
+        }
+    }
+
+    //设置地理位置定位
+    private void requestLocation() {
+        LocationClientOption option = new LocationClientOption();
+        option.setIsNeedAddress(true);
+        mLocationClient.setLocOption(option);
+        mLocationClient.start();
+    }
+
+
+
+    //对权限申请结果的逻辑处理
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                if (grantResults.length > 0) {
+                    for (int result : grantResults) {
+                        if (result != PackageManager.PERMISSION_GRANTED) {
+                            Toast.makeText(this, "必须同意所有权限才能使用本程序", Toast.LENGTH_SHORT).show();
+                            finish();
+                            return;
+                        }
+                    }
+                    requestLocation();
+                } else {
+                    Toast.makeText(this, "发生未知错误", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                break;
+            default:
+        }
+    }
+
+    public class MyLocationListener implements BDLocationListener {
+        @Override
+        public void onReceiveLocation(BDLocation bdLocation) {
+            if (bdLocation.getCity() == null) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(NoteEditActivity.this);
+                MyPosition = prefs.getString("usual_location", null);
+                Log.d("Tag", MyPosition);
+            } else {
+                MyPosition = bdLocation.getCity();
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(NoteEditActivity.this).edit();
+                editor.putString("usual_location", MyPosition);
+                Log.d("Tag", MyPosition);
+                editor.apply();
+            }
+        }
+
+        @Override
+        public void onConnectHotSpotMessage(String s, int i) {
+
+        }
+    }
+
+
+        //隐藏键盘
     private void hideKeyboard() {
         View view = getCurrentFocus();
         if (view != null) {
@@ -120,6 +216,8 @@ public class NoteEditActivity extends AppCompatActivity {
         ContentValues cv = new ContentValues();
         cv.put(NotesDB.CONTENT, editText.getText().toString());
         cv.put(NotesDB.TIME, getTime());
+        cv.put(NotesDB.LOCATION, MyPosition);
+        Log.d("Tag", MyPosition);
         dbWriter.insert(NotesDB.TABLE_NAME, null, cv);
     }
 
@@ -131,4 +229,9 @@ public class NoteEditActivity extends AppCompatActivity {
         return str;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mLocationClient.stop();
+    }
 }

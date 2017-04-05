@@ -18,7 +18,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.smile.notetest.NotesDB;
+import com.example.smile.notetest.db.NotesDB;
 import com.example.smile.notetest.R;
 
 import java.text.SimpleDateFormat;

@@ -16,7 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import com.example.smile.notetest.NotesDB;
+import com.example.smile.notetest.db.NotesDB;
 import com.example.smile.notetest.R;
 import com.example.smile.notetest.adapter.MyAdapter;
 
