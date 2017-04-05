@@ -10,7 +10,7 @@
 
 
 
-    <!--  一下都没有用到  -->
+    <!--  以下都没有用到  -->
 
     <style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- 由于写了这句，可以将状态栏隐藏，同样状态栏的内容也被隐藏了，这就需要对android5以上，以及android 4.4 以及相关版本经行适配，添加一个和ToolBar相同颜色的状态栏大小的矩形-->
@@ -28,6 +28,12 @@
         <!--<item name="android:windowBackground">@color/windowBackground</item>-->
 
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    //定义切换夜间模式的动画效果
+    <style name="WindowAnimationFadeInOut">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
     </style>
 
 </resources>

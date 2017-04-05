@@ -1,12 +1,15 @@
 package com.example.smile.notetest.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -16,9 +19,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import com.example.smile.notetest.NotesDB;
 import com.example.smile.notetest.R;
 import com.example.smile.notetest.adapter.MyAdapter;
+import com.example.smile.notetest.db.NotesDB;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -40,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void initView() {
+
         listView = (ListView) findViewById(R.id.list);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar_main);
@@ -67,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -81,9 +87,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_note_main_search, menu);
-        final MenuItem item = menu.findItem(R.id.action_note_main_search);
+        final MenuItem item_search = menu.findItem(R.id.action_note_main_search);
+        final MenuItem item_change_theme = menu.findItem(R.id.action_note_main_change_theme);
         // 注意这里导报要 导入 android.widget.SearchView 而不是  android.support.v7.widget.SearchView;
-        SearchView searchView = (SearchView) item.getActionView();      //通过以上几句 获取SearchView
+        SearchView searchView = (SearchView) item_search.getActionView();      //通过以上几句 获取SearchView
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             //点击搜索按钮后的功能
@@ -109,6 +116,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
+    //设置主题功能
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.action_note_main_change_theme:
+                SharedPreferences sp = getSharedPreferences("user_settings", MODE_PRIVATE);
+                if ((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                        == Configuration.UI_MODE_NIGHT_YES) {
+                    sp.edit().putInt("theme", 0).apply();
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                } else {
+                    sp.edit().putInt("theme", 1).apply();
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                }
+                getWindow().setWindowAnimations(R.style.WindowAnimationFadeInOut);
+                recreate();
+        }
+
+        return true;
+    }
 
     public void selectDB() {
         cursor = dbReader.query(NotesDB.TABLE_NAME, null, null, null, null, null, NotesDB.ID + " DESC"); //通过id降序排列

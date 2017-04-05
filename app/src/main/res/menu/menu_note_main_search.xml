@@ -10,6 +10,13 @@
         android:orderInCategory="101"
         android:title="@string/search"
         app:actionViewClass="android.widget.SearchView"
-        app:showAsAction="ifRoom|collapseActionView" />
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_note_main_change_theme"
+        android:icon="@drawable/home_title_change_theme"
+        android:orderInCategory="101"
+        android:title="@string/change_theme"
+        app:showAsAction="ifRoom" />
 
 </menu>

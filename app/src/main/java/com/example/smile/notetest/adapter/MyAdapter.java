@@ -65,10 +65,12 @@ public class MyAdapter extends BaseAdapter {
 
         cursor.moveToPosition(position);
         String content = cursor.getString(cursor.getColumnIndex("content"));
+        String location = cursor.getString(cursor.getColumnIndex("location"));
         String time = cursor.getString(cursor.getColumnIndex("time"));
 
         holder.contenttv.setText(content);
         holder.timetv.setText(time);
+        holder.localtv.setText(location);
         return view;
     }
 
