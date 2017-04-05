@@ -217,7 +217,7 @@ public class NoteEditActivity extends AppCompatActivity {
         cv.put(NotesDB.CONTENT, editText.getText().toString());
         cv.put(NotesDB.TIME, getTime());
         cv.put(NotesDB.LOCATION, MyPosition);
-        Log.d("Tag", MyPosition);
+//        Log.d("Tag", MyPosition);
         dbWriter.insert(NotesDB.TABLE_NAME, null, cv);
     }
 

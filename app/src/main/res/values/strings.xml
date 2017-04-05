@@ -8,6 +8,7 @@
     <string name="search">search</string>
     <string name="changeTheme">changeTheme</string>
     <string name="delete">delete</string>
+    <string name="change_theme">change theme</string>
     <string name="save">save</string>
 
 </resources>
